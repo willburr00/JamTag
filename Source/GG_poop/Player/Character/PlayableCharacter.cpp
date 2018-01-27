@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PlayableCharacter.h"
-
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
 APlayableCharacter::APlayableCharacter()
@@ -48,5 +48,21 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 FVector APlayableCharacter::GetAllPlayerDirection() const
 {
-	return FVector();
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), FoundActors);
+
+	FVector allVec;
+
+	for (auto actor : FoundActors) 
+	{
+		APlayableCharacter* pCharacter = Cast<APlayableCharacter>(actor);
+		if (pCharacter != NULL)
+		{
+			allVec += pCharacter->GetVelocity();
+		}
+	}
+
+	allVec.Normalize();
+
+	return allVec;
 }
