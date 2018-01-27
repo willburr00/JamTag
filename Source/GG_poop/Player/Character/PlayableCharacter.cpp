@@ -48,5 +48,5 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 FVector APlayableCharacter::GetAllPlayerDirection() const
 {
-
+	return FVector();
 }
