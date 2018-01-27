@@ -45,3 +45,8 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Player controller Axis attached on " + GetName());
 	}
 }
+
+FVector APlayableCharacter::GetAllPlayerDirection() const
+{
+
+}
