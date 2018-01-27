@@ -35,12 +35,6 @@ void APlayableCharacter::Tick(float DeltaTime)
     m_vInputDirection = movingDirection;
 
     FVector otherDir = GetAllPlayerDirection();
-
-    if (GEngine)
-    {
-        GEngine->AddOnScreenDebugMessage(0, 15.0f, FColor::Red, otherDir.ToString());
-        GEngine->AddOnScreenDebugMessage(1, 15.0f, FColor::Yellow, movingDirection.ToString());
-    }
     
     //If immobile, apply special coef
     if (movingDirection.IsNearlyZero())
