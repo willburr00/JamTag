@@ -8,14 +8,19 @@ APlayableCharacter::APlayableCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
 void APlayableCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+    // AHHHHHHHHHHHHH SO UGLY T_T
+    TArray<FString> Out;
+    GetName().ParseIntoArray(Out, TEXT("_"), true);
+    PlayerId = FCString::Atoi(*Out[Out.Num() - 1]);
+
+    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, GetName() + " with ID " + FString::FromInt(PlayerId));
 }
 
 // Called every frame
@@ -39,11 +44,6 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"));
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"));
-
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Player controller Axis attached on " + GetName());
-	}
 }
 
 FVector APlayableCharacter::GetAllPlayerDirection() const
@@ -65,4 +65,43 @@ FVector APlayableCharacter::GetAllPlayerDirection() const
 	allVec.Normalize();
 
 	return allVec;
+}
+
+int APlayableCharacter::GetPlayerID() const
+{
+    return PlayerId;
+}
+
+int APlayableCharacter::GetTileCount() const
+{
+    return TileCount;
+}
+
+void APlayableCharacter::SetTileCount(int newCount)
+{
+    TileCount = newCount;
+}
+
+void APlayableCharacter::RemoveFromTileCount(int number)
+{
+    if (number < 0)
+    {
+        return;
+    }
+
+    TileCount -= number;
+    if (TileCount < 0)
+    {
+        TileCount = 0;
+    }
+}
+
+void APlayableCharacter::AddFromTileCount(int number)
+{
+    if (number < 0)
+    {
+        return;
+    }
+
+    TileCount += number;
 }
