@@ -152,14 +152,15 @@ void APlayableCharacter::OnDash()
 void APlayableCharacter::Dash(float deltaTime)
 {
     // Update duration according to the distance
-    float DistanceRatio = FVector::Distance(dashEnd, dashStart) / dashDistance;
+    float realDashDistance = FVector::Distance(dashEnd, dashStart);
+    float DistanceRatio = realDashDistance / dashDistance;
     float dashDuration = DistanceRatio * dashTime;
     float lerpRatio = (GetWorld()->TimeSeconds - dashLastest) / dashDuration;
 
     // Update actor location
     SetActorLocation(FMath::Lerp<FVector>(dashStart, dashEnd, lerpRatio));
 
-    if (FVector::Distance(GetActorLocation(), dashEnd) < 10.0f)
+    if (FVector::Distance(GetActorLocation(), dashEnd) < 10.0f || FVector::Distance(GetActorLocation(), dashStart) > realDashDistance)
     {
         GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "End dash");
         isDashing = false;
@@ -250,6 +251,31 @@ float APlayableCharacter::GetRatioPlayerStamina() const
         return 0.0f;
     }
     return currentStamina / maxStamina;
+}
+
+void APlayableCharacter::AddPlayerStamina(float addStam)
+{
+    if (addStam <= 0)
+    {
+        return;
+    }
+
+    currentStamina += addStam;
+}
+
+void APlayableCharacter::RemovePlayerStamina(float removeStam)
+{
+    if (removeStam <= 0)
+    {
+        return;
+    }
+
+    currentStamina -= removeStam;
+
+    if (currentStamina < 0)
+    {
+        currentStamina = 0;
+    }
 }
 
 bool APlayableCharacter::CanUseStamina() const
