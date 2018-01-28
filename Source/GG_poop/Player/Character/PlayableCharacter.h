@@ -47,6 +47,10 @@ public:
         int GetCurrentPlayerStamina() const;
     UFUNCTION(BlueprintCallable, Category = "Player|Stamina")
         float GetRatioPlayerStamina() const;
+    UFUNCTION(BlueprintCallable, Category = "Player|Stamina")
+        void AddPlayerStamina(float addStam);
+    UFUNCTION(BlueprintCallable, Category = "Player|Stamina")
+        void RemovePlayerStamina(float removeStam);
 
     FVector GetInputDirection() const
     {
