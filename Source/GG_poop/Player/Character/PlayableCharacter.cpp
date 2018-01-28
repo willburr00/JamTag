@@ -254,3 +254,22 @@ bool APlayableCharacter::CanUseStamina() const
 {
     return currentStamina > 0 && currentStamina >= currentThresholdStamina;
 }
+
+int APlayableCharacter::GetColorBlindEffectCount() const
+{
+    return colorBlindEffectCount;
+}
+
+void APlayableCharacter::AddColorBlindEffect()
+{
+    colorBlindEffectCount++;
+}
+
+void APlayableCharacter::RemoveColorBlindEffect()
+{
+    colorBlindEffectCount--;
+    if (colorBlindEffectCount < 0)
+    {
+        colorBlindEffectCount = 0;
+    }
+}
