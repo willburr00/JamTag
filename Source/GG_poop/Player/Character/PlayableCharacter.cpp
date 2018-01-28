@@ -252,6 +252,31 @@ float APlayableCharacter::GetRatioPlayerStamina() const
     return currentStamina / maxStamina;
 }
 
+void APlayableCharacter::AddPlayerStamina(float addStam)
+{
+    if (addStam <= 0)
+    {
+        return;
+    }
+
+    currentStamina += addStam;
+}
+
+void APlayableCharacter::RemovePlayerStamina(float removeStam)
+{
+    if (removeStam <= 0)
+    {
+        return;
+    }
+
+    currentStamina -= removeStam;
+
+    if (currentStamina < 0)
+    {
+        currentStamina = 0;
+    }
+}
+
 bool APlayableCharacter::CanUseStamina() const
 {
     return currentStamina > 0 && currentStamina >= currentThresholdStamina;
