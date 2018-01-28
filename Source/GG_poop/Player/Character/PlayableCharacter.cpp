@@ -30,7 +30,7 @@ void APlayableCharacter::BeginPlay()
     GetName().ParseIntoArray(Out, TEXT("_"), true);
     PlayerId = FCString::Atoi(*Out[Out.Num() - 1]);
 
-    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, GetName() + " with ID " + FString::FromInt(PlayerId));
+    GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Cyan, GetName() + " with ID " + FString::FromInt(PlayerId));
 }
 
 // Called every frame
@@ -48,7 +48,7 @@ void APlayableCharacter::Tick(float DeltaTime)
     FVector movingDirection = FVector::ZeroVector;
 
     // Don't want to move without stamina
-    if (CanUseStamina())
+    if (CanUseStamina() && InputComponent)
     {
         // Get inputs values
         float fForwardValue = InputComponent->GetAxisValue(TEXT("MoveForward"));
@@ -108,6 +108,8 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
     PlayerInputComponent->BindAxis(TEXT("MoveRight"));
 
     PlayerInputComponent->BindAction(TEXT("Dash"), IE_Pressed, this, &APlayableCharacter::OnDash);
+
+    GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Cyan, GetName() + " attached bind " + FString::FromInt(PlayerId));
 }
 
 void APlayableCharacter::OnDash()
