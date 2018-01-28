@@ -26,8 +26,11 @@ public:
     // Called to bind functionality to input
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+    // Player ID
     UFUNCTION(BlueprintCallable, Category = "Player")
         int GetPlayerID() const;
+
+    // Tile info
     UFUNCTION(BlueprintCallable, Category = "Player")
         int GetTileCount() const;
     UFUNCTION(BlueprintCallable, Category = "Player")
@@ -37,25 +40,77 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Player")
         void AddFromTileCount(int number);
 
+    // Stamina
+    UFUNCTION(BlueprintCallable, Category = "Player|Stamina")
+        int GetMaxPlayerStamina() const;
+    UFUNCTION(BlueprintCallable, Category = "Player|Stamina")
+        int GetCurrentPlayerStamina() const;
+    UFUNCTION(BlueprintCallable, Category = "Player|Stamina")
+        float GetRatioPlayerStamina() const;
+
     FVector GetInputDirection() const
     {
         return m_vInputDirection;
     }
 
+    // Color Blind
+    UFUNCTION(BlueprintCallable, Category = "Player|Color Blind")
+        int GetColorBlindEffectCount() const;
+    UFUNCTION(BlueprintCallable, Category = "Player|Color Blind")
+        void AddColorBlindEffect();
+    UFUNCTION(BlueprintCallable, Category = "Player|Color Blind")
+        void RemoveColorBlindEffect();
+
 private:
     FVector GetAllPlayerDirection() const;
+
+    // Trigger Method
+    void OnDash();
+    // Update Methode
+    void Dash(float deltaTime);
 
     int PlayerId;
     int TileCount;
     FVector m_vInputDirection;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Coef", meta = (AllowPrivateAccess = "true"))
         float stopCoefOthers;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Coef", meta = (AllowPrivateAccess = "true"))
         float movingSameWayCoefOthers;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Coef", meta = (AllowPrivateAccess = "true"))
         float movingOtherWayCoefOthers;
+
+    // Dash
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Dash", meta = (AllowPrivateAccess = "true"))
+        int dashCost;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Dash", meta = (AllowPrivateAccess = "true"))
+        float dashDistance;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Dash", meta = (AllowPrivateAccess = "true"))
+        float dashTime;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Dash", meta = (AllowPrivateAccess = "true"))
+        bool displayDebugDash;
+    float dashCooldown;
+    float dashLastest;
+    float dashNewTimer;
+    bool isDashing;
+    FVector dashStart;
+    FVector dashEnd;
+
+    // Stamina
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Stamina", meta = (AllowPrivateAccess = "true"))
+        int regenStamina;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Stamina", meta = (AllowPrivateAccess = "true"))
+        int consumeStamina;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Stamina", meta = (AllowPrivateAccess = "true"))
+        float maxStamina;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Stamina", meta = (AllowPrivateAccess = "true"))
+        float thresholdStamina;
+    float currentStamina;
+    float currentThresholdStamina;
+    bool CanUseStamina() const;
+
+    // Color Blind effect
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Color Blind", meta = (AllowPrivateAccess = "true"))
+        int colorBlindEffectCount;
 
 };
