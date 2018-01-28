@@ -79,6 +79,8 @@ private:
         float dashDistance;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Dash", meta = (AllowPrivateAccess = "true"))
         float dashTime;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Dash", meta = (AllowPrivateAccess = "true"))
+        bool displayDebugDash;
     float dashCooldown;
     float dashLastest;
     float dashNewTimer;

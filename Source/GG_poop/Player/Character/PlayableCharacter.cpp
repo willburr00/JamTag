@@ -43,7 +43,7 @@ void APlayableCharacter::Tick(float DeltaTime)
         Dash(DeltaTime);
         return;
     }
-    
+
     FVector otherDir = GetAllPlayerDirection();
     FVector movingDirection = FVector::ZeroVector;
 
@@ -126,7 +126,6 @@ void APlayableCharacter::OnDash()
         direction.Normalize();
         dashEnd = dashStart + direction * dashDistance;
 
-
         FCollisionQueryParams TraceParams(FName(TEXT("TraceUsableActor")), true, this);
         TraceParams.bTraceAsyncScene = true;
         TraceParams.bReturnPhysicalMaterial = false;
@@ -135,13 +134,28 @@ void APlayableCharacter::OnDash()
 
         GetWorld()->LineTraceSingleByChannel(Hit, dashStart, dashEnd, ECC_WorldStatic, TraceParams);
 
-        DrawDebugLine(GetWorld(), dashStart, dashEnd, FColor::Red, true, 10.0f);
+        // Don't want to go through blocking entity
+        if (Hit.bBlockingHit > 0)
+        {
+            dashEnd = Hit.ImpactPoint;
+        }
+
+        if (displayDebugDash)
+        {
+            DrawDebugLine(GetWorld(), dashStart, dashEnd, FColor::Red, true, 10.0f);
+        }
     }
 }
 
 void APlayableCharacter::Dash(float deltaTime)
 {
-    SetActorLocation(FMath::Lerp<FVector>(dashStart, dashEnd, (GetWorld()->TimeSeconds - dashLastest) / dashTime));
+    // Update duration according to the distance
+    float DistanceRatio = FVector::Distance(dashEnd, dashStart) / dashDistance;
+    float dashDuration = DistanceRatio * dashTime;
+    float lerpRatio = (GetWorld()->TimeSeconds - dashLastest) / dashDuration;
+
+    // Update actor location
+    SetActorLocation(FMath::Lerp<FVector>(dashStart, dashEnd, lerpRatio));
 
     if (FVector::Distance(GetActorLocation(), dashEnd) < 10.0f)
     {
