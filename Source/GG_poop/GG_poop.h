@@ -4,3 +4,4 @@
 
 #include "Engine.h"
 #include "EngineUtils.h"
+#include "SlateBasics.h"
