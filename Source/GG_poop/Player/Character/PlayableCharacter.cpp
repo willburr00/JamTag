@@ -71,18 +71,25 @@ FVector APlayableCharacter::GetAllPlayerDirection() const
     TArray<AActor*> FoundActors;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), FoundActors);
 
-    FVector allVec;
+    FVector allVec(0, 0, 0);
 
     for (auto actor : FoundActors)
     {
         APlayableCharacter* pCharacter = Cast<APlayableCharacter>(actor);
-        if (pCharacter != NULL)
+        if (pCharacter != NULL && pCharacter != this)
         {
-            allVec += pCharacter->GetVelocity();
+            FVector pDir = pCharacter->GetInputDirection();
+            if (!pDir.IsNearlyZero())
+            {
+                allVec += pDir;
+            }
         }
     }
 
-    allVec.Normalize();
+    if (!allVec.IsNormalized())
+    {
+        allVec.Normalize();
+    }
 
     return allVec;
 }
