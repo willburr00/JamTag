@@ -53,6 +53,14 @@ public:
         return m_vInputDirection;
     }
 
+    // Color Blind
+    UFUNCTION(BlueprintCallable, Category = "Player|Color Blind")
+        int GetColorBlindEffectCount() const;
+    UFUNCTION(BlueprintCallable, Category = "Player|Color Blind")
+        void AddColorBlindEffect();
+    UFUNCTION(BlueprintCallable, Category = "Player|Color Blind")
+        void RemoveColorBlindEffect();
+
 private:
     FVector GetAllPlayerDirection() const;
 
@@ -100,4 +108,9 @@ private:
     float currentStamina;
     float currentThresholdStamina;
     bool CanUseStamina() const;
+
+    // Color Blind effect
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character|Color Blind", meta = (AllowPrivateAccess = "true"))
+        int colorBlindEffectCount;
+
 };
