@@ -14,7 +14,7 @@ APlayableCharacter::APlayableCharacter()
 // Called when the game starts or when spawned
 void APlayableCharacter::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
     // AHHHHHHHHHHHHH SO UGLY T_T
     TArray<FString> Out;
@@ -40,7 +40,7 @@ void APlayableCharacter::Tick(float DeltaTime)
     m_vInputDirection = movingDirection;
 
     FVector otherDir = GetAllPlayerDirection();
-    
+
     //If immobile, apply special coef
     if (movingDirection.IsNearlyZero())
     {
@@ -62,29 +62,29 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("MoveForward"));
-	PlayerInputComponent->BindAxis(TEXT("MoveRight"));
+    PlayerInputComponent->BindAxis(TEXT("MoveForward"));
+    PlayerInputComponent->BindAxis(TEXT("MoveRight"));
 }
 
 FVector APlayableCharacter::GetAllPlayerDirection() const
 {
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), FoundActors);
+    TArray<AActor*> FoundActors;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayableCharacter::StaticClass(), FoundActors);
 
-	FVector allVec;
+    FVector allVec;
 
-	for (auto actor : FoundActors) 
-	{
-		APlayableCharacter* pCharacter = Cast<APlayableCharacter>(actor);
-		if (pCharacter != NULL)
-		{
-			allVec += pCharacter->GetVelocity();
-		}
-	}
+    for (auto actor : FoundActors)
+    {
+        APlayableCharacter* pCharacter = Cast<APlayableCharacter>(actor);
+        if (pCharacter != NULL)
+        {
+            allVec += pCharacter->GetVelocity();
+        }
+    }
 
-	allVec.Normalize();
+    allVec.Normalize();
 
-	return allVec;
+    return allVec;
 }
 
 int APlayableCharacter::GetPlayerID() const
