@@ -29,8 +29,6 @@ void APlayableCharacter::BeginPlay()
     TArray<FString> Out;
     GetName().ParseIntoArray(Out, TEXT("_"), true);
     PlayerId = FCString::Atoi(*Out[Out.Num() - 1]);
-
-    GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Cyan, GetName() + " with ID " + FString::FromInt(PlayerId));
 }
 
 // Called every frame
@@ -92,10 +90,7 @@ void APlayableCharacter::Tick(float DeltaTime)
         // Add other direction according to a same/other way coef
         movingDirection += otherDir * (sameWay ? movingSameWayCoefOthers : movingOtherWayCoefOthers);
     }
-
-
-    GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, FString::FromInt(GetCurrentPlayerStamina()) + "/" + FString::FromInt(GetMaxPlayerStamina()));
-
+    
     AddMovementInput(movingDirection);
 }
 
@@ -108,16 +103,12 @@ void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
     PlayerInputComponent->BindAxis(TEXT("MoveRight"));
 
     PlayerInputComponent->BindAction(TEXT("Dash"), IE_Pressed, this, &APlayableCharacter::OnDash);
-
-    GEngine->AddOnScreenDebugMessage(-1, 20.0f, FColor::Cyan, GetName() + " attached bind " + FString::FromInt(PlayerId));
 }
 
 void APlayableCharacter::OnDash()
 {
     if (CanUseStamina() && currentStamina >= dashCost && !isDashing)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "Start dash");
-
         currentStamina -= dashCost;
         dashLastest = GetWorld()->TimeSeconds;
         dashNewTimer = dashLastest + dashCooldown;
@@ -162,7 +153,6 @@ void APlayableCharacter::Dash(float deltaTime)
 
     if (FVector::Distance(GetActorLocation(), dashEnd) < 10.0f || FVector::Distance(GetActorLocation(), dashStart) > realDashDistance)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Blue, "End dash");
         isDashing = false;
     }
 }
