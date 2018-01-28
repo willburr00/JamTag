@@ -3,11 +3,12 @@
 #include "PlayableCharacter.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
+
 // Sets default values
 APlayableCharacter::APlayableCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+    // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+    PrimaryActorTick.bCanEverTick = true;
 }
 
 // Called when the game starts or when spawned
@@ -26,21 +27,40 @@ void APlayableCharacter::BeginPlay()
 // Called every frame
 void APlayableCharacter::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaTime);
 
-	float fForwardValue = InputComponent->GetAxisValue(TEXT("MoveForward"));
-	float fRightValue = InputComponent->GetAxisValue(TEXT("MoveRight"));
+    // Get inputs values
+    float fForwardValue = InputComponent->GetAxisValue(TEXT("MoveForward"));
+    float fRightValue = InputComponent->GetAxisValue(TEXT("MoveRight"));
 
-	FVector movingDirection(fForwardValue, fRightValue, 0);
-	movingDirection.Normalize();
+    FVector movingDirection(fForwardValue, fRightValue, 0);
 
-	AddMovementInput(movingDirection);
+    // Normalize and save direction
+    movingDirection.Normalize();
+    m_vInputDirection = movingDirection;
+
+    FVector otherDir = GetAllPlayerDirection();
+    
+    //If immobile, apply special coef
+    if (movingDirection.IsNearlyZero())
+    {
+        movingDirection += (otherDir * stopCoefOthers);
+    }
+    else
+    {
+        bool sameWay = FVector::DotProduct(movingDirection, otherDir) >= 0;
+
+        // Add other direction according to a same/other way coef
+        movingDirection += otherDir * (sameWay ? movingSameWayCoefOthers : movingOtherWayCoefOthers);
+    }
+
+    AddMovementInput(movingDirection);
 }
 
 // Called to bind functionality to input
 void APlayableCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"));
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"));

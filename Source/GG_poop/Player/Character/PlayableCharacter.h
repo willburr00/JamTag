@@ -37,10 +37,25 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Player")
         void AddFromTileCount(int number);
 
+    FVector GetInputDirection() const
+    {
+        return m_vInputDirection;
+    }
+
 private:
     FVector GetAllPlayerDirection() const;
 
     int PlayerId;
     int TileCount;
+    FVector m_vInputDirection;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character", meta = (AllowPrivateAccess = "true"))
+        float stopCoefOthers;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character", meta = (AllowPrivateAccess = "true"))
+        float movingSameWayCoefOthers;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character", meta = (AllowPrivateAccess = "true"))
+        float movingOtherWayCoefOthers;
 
 };
